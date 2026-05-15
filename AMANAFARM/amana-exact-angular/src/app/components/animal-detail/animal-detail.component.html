@@ -1,0 +1,109 @@
+@if (animal) {
+<div class="breadcrumb" style="background:#fff;border-bottom:1px solid var(--border);padding:9px 20px">
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+    <a routerLink="/" style="color:var(--green);cursor:pointer">الرئيسية</a>
+    <span>›</span>
+    <a routerLink="/animals" style="color:var(--green);cursor:pointer">السوق</a>
+    <span>›</span>
+    <span style="color:#666;font-weight:800">{{ animal.name }}</span>
+  </div>
+</div>
+
+<div style="max-width:1280px;margin:auto;padding:18px 20px;display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+      <div style="position:relative;height:420px;overflow:hidden;background:#e8f0ea">
+        <img [src]="'assets/bagraa.jpg'" alt="{{ animal.name }}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:80px>{{ animal.emoji || '🐑' }}</span>'">
+        <div style="position:absolute;top:14px;right:14px;display:flex;flex-direction:column;gap:6px">
+          <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:800;color:#fff;background:var(--gold)">مميز</span>
+          <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:800;color:#fff;background:var(--green)">جديد</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <h1 style="font-size:22px;font-weight:900">{{ animal.name }}</h1>
+        <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px">
+          👁️ {{ animal.views || 0 }} مشاهدة
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px">📍 {{ animal.location }}</div>
+        <div style="font-size:12px;color:var(--muted)">📅 نُشر {{ animal.date || 'منذ 6 أيام' }}</div>
+        <div style="font-size:12px;color:var(--green);display:flex;align-items:center;gap:4px">✓ موثوق</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+        <span style="padding:4px 10px;border-radius:99px;background:var(--bg);font-size:11px;font-weight:800;color:var(--text-2)">{{ animal.weight || '55 كغ' }}</span>
+        <span style="padding:4px 10px;border-radius:99px;background:var(--bg);font-size:11px;font-weight:800;color:var(--text-2)">{{ animal.gender || 'ذكر' }}</span>
+        <span style="padding:4px 10px;border-radius:99px;background:var(--bg);font-size:11px;font-weight:800;color:var(--text-2)">{{ animal.age || 'سنة' }}</span>
+        <span style="padding:4px 10px;border-radius:99px;background:var(--green-light);font-size:11px;font-weight:800;color:var(--green)">{{ animal.healthStatus || 'ممتازة ✓' }}</span>
+      </div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.8;margin-bottom:20px">{{ animal.description || 'حيوان بصحة ممتازة، تم تربيته في مزرعة خاصة، مطعم بالكامل.' }}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+        <div style="background:var(--bg);border-radius:8px;padding:10px 12px">
+          <div style="font-size:10px;color:var(--muted);font-weight:600">السلالة</div>
+          <div style="font-size:13px;font-weight:800;margin-top:2px">{{ animal.breed || 'برقي أصيل' }}</div>
+        </div>
+        <div style="background:var(--bg);border-radius:8px;padding:10px 12px">
+          <div style="font-size:10px;color:var(--muted);font-weight:600">العمر</div>
+          <div style="font-size:13px;font-weight:800;margin-top:2px">{{ animal.age || 'سنة واحدة' }}</div>
+        </div>
+        <div style="background:var(--bg);border-radius:8px;padding:10px 12px">
+          <div style="font-size:10px;color:var(--muted);font-weight:600">الوزن</div>
+          <div style="font-size:13px;font-weight:800;margin-top:2px">{{ animal.weight || '55 كغ' }}</div>
+        </div>
+        <div style="background:var(--bg);border-radius:8px;padding:10px 12px">
+          <div style="font-size:10px;color:var(--muted);font-weight:600">الحالة الصحية</div>
+          <div style="font-size:13px;font-weight:800;margin-top:2px;color:var(--green)">ممتازة</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:14px;position:sticky;top:80px">
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px">
+      <div style="font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px">السعر</div>
+      <div style="font-size:32px;font-weight:900;color:var(--green);margin-bottom:16px">{{ fmt(animal.price) }} <span style="font-size:14px;color:var(--muted);font-weight:600">دت</span></div>
+      <button (click)="openWa()" style="width:100%;padding:13px;border-radius:9px;background:var(--wa);color:#fff;font-size:13.5px;font-weight:800;border:0;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px">
+        💬 تواصل واتساب
+      </button>
+      <button style="width:100%;padding:12px;border-radius:9px;background:transparent;color:var(--green);border:2px solid var(--green);font-size:13px;font-weight:800;cursor:pointer">
+        🛒 أضف للسلة
+      </button>
+      <button style="width:100%;padding:12px;border-radius:9px;background:var(--bg);color:var(--green);border:0;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px">
+        🤍 حفظ في المفضلة
+      </button>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:48px;height:48px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;background:var(--green)">🌿</div>
+        <div>
+          <div style="font-size:14px;font-weight:800">{{ animal.sellerName || 'البائع' }}</div>
+          <div style="font-size:11px;color:var(--green);font-weight:700">بائع موثوق ✓</div>
+        </div>
+        <div style="margin-right:auto;font-size:13px;color:var(--gold);font-weight:900">⭐ {{ animal.sellerRating || 4.8 }}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-bottom:12px">
+        📞 {{ animal.phone || 'XX XXX XXX' }}
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+        📍 {{ animal.location || 'تونس' }}
+      </div>
+    </div>
+
+    <div style="background:var(--green-light);border:1px solid rgba(15,122,60,.15);border-radius:12px;padding:14px">
+      <div style="font-size:12px;font-weight:800;color:var(--green);margin-bottom:6px">💡 نصيحة AMANAFARM</div>
+      <p style="font-size:12px;color:var(--text-2);line-height:1.7">تأكد من مشاهدة الحيوان شخصياً أو عبر مكالمة مرئية قبل الدفع. لا تدفع أي مبلغ قبل التأكد من صحة المعلومات.</p>
+    </div>
+  </div>
+</div>
+} @else {
+<div style="max-width:600px;margin:60px auto;text-align:center;padding:40px;background:#fff;border-radius:16px">
+  <div style="font-size:60px;margin-bottom:16px">🔍</div>
+  <h2 style="font-size:20px;font-weight:900;margin-bottom:8px">الإعلان غير موجود</h2>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:20px">قد يكون هذا الإعلان قد أزيل أو الرابط غير صحيح.</p>
+  <a routerLink="/animals" style="display:inline-block;padding:12px 28px;background:var(--green);color:#fff;border-radius:99px;font-weight:900;font-size:13px;cursor:pointer">← العودة للسوق</a>
+</div>
+}

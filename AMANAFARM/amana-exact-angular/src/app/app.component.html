@@ -1,0 +1,334 @@
+<div class="toast-wrap" #toastWrap aria-live="polite" aria-atomic="false"></div>
+
+<div class="ann-bar">
+  <div class="ann-dot"></div>
+  <span>أعلن مجانًا وبيع أسرع في كامل تونس</span>
+  <span class="ann-badge">نشر الإعلان الأول مجاني 🎉</span>
+</div>
+
+<header class="header" role="banner">
+  <a href="#" class="logo" aria-label="AMANAFARM الرئيسية">
+    <div class="logo-mark"><i data-lucide="leaf" width="22" height="22" stroke="var(--green)" stroke-width="2.5" aria-hidden="true"></i></div>
+    <div class="logo-texts"><div class="name">AMANAFARM</div><div class="tagline">منصة الفلاحة والحيوانات الأولى في تونس</div></div>
+  </a>
+  <div class="search-wrap" role="search">
+    <input #searchInput id="searchInput" type="search" placeholder="ابحث: خروف، بقرة، علف، بيطري..." aria-label="بحث في الإعلانات" (input)="debouncedFilter()" (keydown)="$event.key === 'Enter' && applyFilter()" />
+    <button class="search-btn" id="searchBtn" (click)="applyFilter()" aria-label="تنفيذ البحث"><i data-lucide="search" width="14" aria-hidden="true"></i> بحث</button>
+  </div>
+  <div class="header-actions">
+    <button class="hact auth-only" id="cartAction" (click)="openPanel('cart')" aria-label="السلة">
+      <i data-lucide="shopping-cart" width="19" aria-hidden="true"></i><div class="hact-label">السلة</div>
+      <span class="hbadge hidden" id="cartBadge" aria-hidden="true">0</span>
+    </button>
+    <button class="hact auth-only" id="messagesAction" (click)="openPanel('messages')" aria-label="الرسائل">
+      <i data-lucide="message-circle" width="19" aria-hidden="true"></i><div class="hact-label">رسائل</div>
+      <span class="hbadge hidden" id="msgBadge" aria-hidden="true">0</span>
+    </button>
+    <button class="hact auth-only" id="notifAction" (click)="openPanel('notif')" aria-label="الإشعارات">
+      <i data-lucide="bell" width="19" aria-hidden="true"></i><div class="hact-label">إشعارات</div>
+      <span class="hbadge red hidden" id="notifBadge" aria-hidden="true">0</span>
+    </button>
+    <div class="divider-v auth-only"></div>
+    <button class="btn-login-header guest-only" id="btnLoginHeader" (click)="openAuthModal('login')"><i data-lucide="user" width="15" aria-hidden="true"></i> تسجيل الدخول</button>
+    <button class="btn-post-header guest-only" id="btnPostGuest" (click)="openAuthModal('login')"><i data-lucide="plus" width="14" aria-hidden="true"></i> أعلن مجاناً</button>
+    <div class="user-block auth-only" id="userAction" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" (click)="toggleDropdown($event)">
+      <div class="user-avt" id="userAvatar"><i data-lucide="user" width="17" stroke="var(--muted)" aria-hidden="true"></i></div>
+      <div><div class="greet">مرحباً،</div><div class="uname" id="userName">—</div></div>
+      <i data-lucide="chevron-down" width="13" stroke="var(--muted)" aria-hidden="true"></i>
+      <div class="user-dropdown" #userDropdown id="userDropdown" role="menu">
+        <div class="ud-header"><div class="ud-avt" id="udAvt" aria-hidden="true">🌿</div><div><div class="ud-name" id="udName"></div><div class="ud-email" id="udEmail"></div></div></div>
+        <div class="ud-item" role="menuitem" tabindex="0" (click)="openPanel('add'); closeDropdown()"><i data-lucide="file-plus" width="15" aria-hidden="true"></i> إعلاناتي</div>
+        <div class="ud-item" role="menuitem" tabindex="0" (click)="openPanel('cart'); closeDropdown()"><i data-lucide="shopping-cart" width="15" aria-hidden="true"></i> سلتي</div>
+        <div class="ud-item" role="menuitem" tabindex="0" (click)="closeDropdown(); showComingSoon('المفضلة')"><i data-lucide="heart" width="15" aria-hidden="true"></i> المفضلة</div>
+        <div class="ud-item" role="menuitem" tabindex="0" (click)="closeDropdown(); showComingSoon('الإعدادات')"><i data-lucide="settings" width="15" aria-hidden="true"></i> الإعدادات</div>
+        <div class="ud-divider" role="separator"></div>
+        <div class="ud-item danger" role="menuitem" tabindex="0" (click)="doLogout(); closeDropdown()"><i data-lucide="log-out" width="15" aria-hidden="true"></i> تسجيل الخروج</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar" aria-label="التنقل الرئيسي">
+  <ul>
+    <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="scrollTo('top')"><i data-lucide="home" width="14" aria-hidden="true"></i> الرئيسية</a></li>
+    <li><a routerLink="/animals" routerLinkActive="active"><i data-lucide="beef" width="14" aria-hidden="true"></i> الحيوانات</a></li>
+    <li><a routerLink="/services" routerLinkActive="active"><i data-lucide="wrench" width="14" aria-hidden="true"></i> الخدمات</a></li>
+    <li><a (click)="openLegal('about')" style="cursor:pointer"><i data-lucide="info" width="14" aria-hidden="true"></i> من نحن</a></li>
+  </ul>
+  <div class="nb-spacer"></div>
+  <button class="nb-post-btn" id="navPostBtn" (click)="goPost()"><i data-lucide="plus" width="15" aria-hidden="true"></i> أضف إعلانك مجاناً</button>
+</nav>
+
+<div class="panel-overlay" #panelOverlay id="panelOverlay" (click)="closePanel()"></div>
+
+<div class="side-panel" #cartPanel id="cartPanel" role="dialog" aria-modal="true" aria-label="سلة المشتريات">
+  <div class="panel-head"><h3><i data-lucide="shopping-cart" width="17" aria-hidden="true"></i> سلة المشتريات</h3><button class="panel-close" (click)="closePanel()" aria-label="إغلاق السلة">×</button></div>
+  <div class="panel-body" id="cartBody"></div>
+  <div class="panel-footer" id="cartFooter"></div>
+</div>
+
+<div class="side-panel" #messagesPanel id="messagesPanel" role="dialog" aria-modal="true" aria-label="الرسائل">
+  <div class="panel-head"><h3><i data-lucide="message-circle" width="17" aria-hidden="true"></i> الرسائل</h3><button class="panel-close" (click)="closePanel()" aria-label="إغلاق الرسائل">×</button></div>
+  <div class="panel-body" id="messagesBody"></div>
+  <div class="panel-footer"><button class="new-msg-btn" (click)="showComingSoon('ميزة الرسائل')">✏️ رسالة جديدة</button></div>
+</div>
+
+<div class="side-panel" #notifPanel id="notifPanel" role="dialog" aria-modal="true" aria-label="الإشعارات">
+  <div class="panel-head"><h3><i data-lucide="bell" width="17" aria-hidden="true"></i> الإشعارات</h3><button class="panel-close" (click)="closePanel()" aria-label="إغلاق الإشعارات">×</button></div>
+  <div class="panel-body" id="notifBody"></div>
+  <div class="panel-footer"><button class="mark-read-btn" (click)="markAllRead()">✓ تعليم الكل كمقروء</button></div>
+</div>
+
+<div class="side-panel add-panel" #addPanel id="addPanel" role="dialog" aria-modal="true" aria-label="إضافة إعلان">
+  <div class="panel-head"><h3><i data-lucide="file-plus" width="17" aria-hidden="true"></i> أضف إعلانك مجاناً</h3><button class="panel-close" (click)="closePanel()" aria-label="إغلاق نموذج الإعلان">×</button></div>
+  <div class="panel-body" id="addBody">
+    <div id="addForm">
+      <div class="form-section">
+        <div class="form-section-title"><i data-lucide="grid" width="13" aria-hidden="true"></i> الفئة</div>
+        <div class="cat-grid" id="addCatGrid" role="radiogroup" aria-label="اختر الفئة">
+          <div class="cat-btn selected" data-cat="أغنام" (click)="selectCat($event.currentTarget)" role="radio" aria-checked="true" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🐑</div><div class="cat-btn-txt">أغنام</div></div>
+          <div class="cat-btn" data-cat="أبقار" (click)="selectCat($event.currentTarget)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🐄</div><div class="cat-btn-txt">أبقار</div></div>
+          <div class="cat-btn" data-cat="دواجن" (click)="selectCat($event.currentTarget)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🐔</div><div class="cat-btn-txt">دواجن</div></div>
+          <div class="cat-btn" data-cat="ماعز" (click)="selectCat($event.currentTarget)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🐐</div><div class="cat-btn-txt">ماعز</div></div>
+          <div class="cat-btn" data-cat="منتجات" (click)="selectCat($event.currentTarget)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🌾</div><div class="cat-btn-txt">منتجات</div></div>
+          <div class="cat-btn" data-cat="خدمات" (click)="selectCat($event.currentTarget)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🚚</div><div class="cat-btn-txt">خدمات</div></div>
+        </div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title"><i data-lucide="file-text" width="13" aria-hidden="true"></i> معلومات الإعلان</div>
+        <div class="field"><label for="addTitle">عنوان الإعلان <abbr title="مطلوب">*</abbr></label><input type="text" id="addTitle" placeholder="مثال: خروف بربري ممتاز للبيع" maxlength="100" autocomplete="off" /></div>
+        <div class="fields-row-2">
+          <div class="field"><label for="addPrice">السعر (دت) <abbr title="مطلوب">*</abbr></label><input type="number" id="addPrice" placeholder="1450" min="1" max="999999" /></div>
+          <div class="field"><label for="addWilaya">الولاية <abbr title="مطلوب">*</abbr></label>
+            <select id="addWilaya"><option value="">اختر الولاية</option><option>تونس</option><option>أريانة</option><option>بن عروس</option><option>منوبة</option><option>نابل</option><option>زغوان</option><option>بنزرت</option><option>باجة</option><option>جندوبة</option><option>الكاف</option><option>سليانة</option><option>سوسة</option><option>المنستير</option><option>المهدية</option><option>صفاقس</option><option>القيروان</option><option>القصرين</option><option>سيدي بوزيد</option><option>قابس</option><option>مدنين</option><option>تطاوين</option><option>قفصة</option><option>توزر</option><option>قبلي</option></select></div>
+        </div>
+        <div class="fields-row-2">
+          <div class="field"><label for="addWeight">الوزن</label><input type="text" id="addWeight" placeholder="مثال: 55 كغ" maxlength="30" /></div>
+          <div class="field"><label for="addGender">الجنس</label><select id="addGender"><option value="">اختر</option><option>ذكر</option><option>أنثى</option><option>مجموعة</option></select></div>
+        </div>
+        <div class="field"><label for="addDesc">وصف الإعلان</label><textarea id="addDesc" placeholder="الحالة الصحية، التطعيمات، مميزات أخرى..." maxlength="1000"></textarea></div>
+        <div class="field"><label for="addPhone">رقم الهاتف (واتساب) <abbr title="مطلوب">*</abbr></label><input type="tel" id="addPhone" placeholder="XX XXX XXX" maxlength="15" autocomplete="tel" /></div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title"><i data-lucide="image" width="13" aria-hidden="true"></i> الصور</div>
+        <label class="photo-upload-area" for="addPhotos">
+          <input type="file" id="addPhotos" multiple accept="image/jpeg,image/png,image/webp" (change)="previewPhotos($event.target)" />
+          <div class="photo-upload-icon" aria-hidden="true">📸</div>
+          <div class="photo-upload-txt">انقر لإضافة صور</div>
+          <div class="photo-upload-sub">JPG، PNG — حتى 5 صور (2MB لكل صورة)</div>
+        </label>
+        <div class="photo-previews" id="photoPreviews" aria-label="معاينة الصور"></div>
+      </div>
+    </div>
+    <div class="success-annonce" id="addSuccess" style="display: none">
+      <div class="success-annonce-icon" aria-hidden="true">🎉</div>
+      <h3>تم نشر إعلانك بنجاح!</h3>
+      <p>إعلانك الآن مرئي لآلاف المستخدمين في كامل تونس.<br />ستتلقى رسائل واتساب مباشرة من المشترين.</p>
+      <br /><button class="submit-annonce-btn" (click)="resetAddForm()">نشر إعلان آخر</button>
+    </div>
+  </div>
+  <div class="panel-footer" id="addFooter">
+    <button class="submit-annonce-btn" id="submitAnnonceBtn" (click)="submitAnnonce()"><i data-lucide="send" width="15" aria-hidden="true"></i> نشر الإعلان مجاناً</button>
+  </div>
+</div>
+
+<router-outlet></router-outlet>
+
+<section id="market" class="layout" aria-label="سوق الإعلانات">
+  <aside class="sidebar" aria-label="فلاتر متقدمة">
+    <div class="box">
+      <div class="box-title"><i data-lucide="bar-chart-2" width="16" aria-hidden="true"></i> إحصائيات</div>
+      <div class="stat-mini"><div class="stat-mini-icon"><i data-lucide="tag" width="18" aria-hidden="true"></i></div><div><div class="stat-mini-num" id="sideCount">—</div><div class="stat-mini-lbl">إعلان نشط</div></div></div>
+      <div class="stat-mini"><div class="stat-mini-icon"><i data-lucide="trending-up" width="18" aria-hidden="true"></i></div><div><div class="stat-mini-num" id="sideAvg">—</div><div class="stat-mini-lbl">متوسط السعر (دت)</div></div></div>
+      <div class="stat-mini"><div class="stat-mini-icon"><i data-lucide="check-circle" width="18" aria-hidden="true"></i></div><div><div class="stat-mini-num" id="sideVerified">—</div><div class="stat-mini-lbl">إعلان موثق</div></div></div>
+    </div>
+    <div class="box">
+      <div class="box-title"><i data-lucide="grid" width="16" aria-hidden="true"></i> خدمات سريعة</div>
+      <div class="svc-item" (click)="openServiceModal('transport')"><div class="svc-icon"><i data-lucide="truck" width="18" aria-hidden="true"></i></div><div class="svc-txt"><strong>نقل الحيوانات</strong><span>قريباً</span></div></div>
+      <div class="svc-item" (click)="openServiceModal('vet')"><div class="svc-icon"><i data-lucide="stethoscope" width="18" aria-hidden="true"></i></div><div class="svc-txt"><strong>استشارة بيطرية</strong><span>قريباً</span></div></div>
+      <div class="svc-item" (click)="openServiceModal('pharmacy')"><div class="svc-icon"><i data-lucide="pill" width="18" aria-hidden="true"></i></div><div class="svc-txt"><strong>الصيدلية</strong><span>قريباً</span></div></div>
+      <div class="map-mini" role="img" aria-label="خريطة تغطية تونس"><i data-lucide="map-pin" width="20" aria-hidden="true"></i><h5>تغطية كامل تونس</h5><p>24 ولاية — خدمات قريبة منك</p></div>
+    </div>
+  </aside>
+  <main>
+    <button class="filter-mobile-btn" (click)="showComingSoon('فلترة متقدمة')"><i data-lucide="sliders" width="16" aria-hidden="true"></i>فلترة وتصفية</button>
+    <div class="content-header">
+      <h2>أحدث الإعلانات</h2>
+      <div class="result-info"><strong id="resultCount">—</strong> إعلان متاح</div>
+    </div>
+    <div class="filters-row" role="toolbar" aria-label="أدوات تصفية الإعلانات">
+      <div class="filter-pills" role="group" aria-label="تصفية حسب الفئة">
+        <button class="pill active" data-filter="all" (click)="filterByCategory('all')">الكل</button>
+        <button class="pill" data-filter="أغنام" (click)="filterByCategory('أغنام')">🐑 أغنام</button>
+        <button class="pill" data-filter="أبقار" (click)="filterByCategory('أبقار')">🐄 أبقار</button>
+        <button class="pill" data-filter="دواجن" (click)="filterByCategory('دواجن')">🐔 دواجن</button>
+        <button class="pill" data-filter="ماعز" (click)="filterByCategory('ماعز')">🐐 ماعز</button>
+        <button class="pill" data-filter="featured" (click)="filterByCategory('featured')">⭐ مميز</button>
+      </div>
+      <label for="sortSelect" class="sr-only">ترتيب حسب</label>
+      <select class="sort-select" id="sortSelect" (change)="applyFilter()" aria-label="ترتيب النتائج">
+        <option value="newest">الأحدث</option>
+        <option value="cheap">الأرخص</option>
+        <option value="expensive">الأغلى</option>
+      </select>
+    </div>
+    <div class="ads-grid" #adsGrid id="adsGrid" aria-live="polite" aria-label="قائمة الإعلانات">
+      <div class="loading-box"><div class="spinner" aria-hidden="true"></div>جاري تحميل الإعلانات...</div>
+    </div>
+    <div class="pagination" #pagination id="pagination" role="navigation" aria-label="التنقل بين الصفحات"></div>
+  </main>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="ft-brand">
+      <div class="ft-name">AMANAFARM</div>
+      <div class="ft-tag">منصة الفلاحة والحيوانات الأولى في تونس</div>
+      <p>سوق رقمي متكامل يربط المربين والمستثمرين وجميع الخدمات الفلاحية.</p>
+      <div class="ft-social">
+        <a class="ft-soc" href="#" aria-label="Facebook" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a class="ft-soc" href="#" aria-label="Instagram" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2" stroke-linecap="round"/></svg></a>
+        <a class="ft-soc" href="#" aria-label="YouTube" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#084d25"/></svg></a>
+        <a class="ft-soc" href="#" aria-label="LinkedIn" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+      </div>
+    </div>
+    <div class="ft-col">
+      <h4>الحيوانات والمنتجات</h4>
+      <ul>
+        <li><a href="#market" (click)="filterByCategory('أغنام')">أغنام وخرفان</a></li>
+        <li><a href="#market" (click)="filterByCategory('أبقار')">أبقار وعجول</a></li>
+        <li><a href="#market" (click)="filterByCategory('دواجن')">دواجن وطيور</a></li>
+        <li><a href="#market" (click)="filterByCategory('منتجات')">أعلاف ومنتجات</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>الخدمات</h4>
+      <ul>
+        <li><a (click)="openServiceModal('transport')">نقل الحيوانات</a></li>
+        <li><a (click)="openServiceModal('vet')">استشارات بيطرية</a></li>
+        <li><a (click)="openServiceModal('pharmacy')">الصيدلية البيطرية</a></li>
+        <li><a (click)="openServiceModal('products')">المنتجات الفلاحية</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>المنصة</h4>
+      <ul>
+        <li><a (click)="openLegal('about')">من نحن</a></li>
+        <li><a (click)="openLegal('contact')">اتصل بنا</a></li>
+        <li><a (click)="openLegal('terms')">شروط الاستخدام</a></li>
+        <li><a (click)="openLegal('privacy')">سياسة الخصوصية</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div><div class="copy">© 2026 AMANAFARM — جميع الحقوق محفوظة</div></div>
+    <div class="ft-bottom-links">
+      <a (click)="openLegal('terms')">الشروط</a>
+      <a (click)="openLegal('privacy')">الخصوصية</a>
+      <a (click)="openLegal('contact')">الدعم</a>
+    </div>
+  </div>
+</footer>
+
+<nav class="mobile-bottom-nav" aria-label="التنقل السفلي">
+  <a routerLink="/" aria-label="الرئيسية"><i data-lucide="home" width="19" aria-hidden="true"></i><span>الرئيسية</span></a>
+  <a routerLink="/animals" aria-label="السوق"><i data-lucide="search" width="19" aria-hidden="true"></i><span>السوق</span></a>
+  <a href="#" class="mobile-plus" id="mobAdd" aria-label="إضافة إعلان" (click)="$event.preventDefault(); goPost()"><span aria-hidden="true">+</span></a>
+  <a href="#" id="mobMessages" aria-label="الرسائل" (click)="$event.preventDefault(); !user ? openAuthModal('login') : openPanel('messages')"><i data-lucide="message-circle" width="19" aria-hidden="true"></i><span>رسائل</span></a>
+  <a href="#" id="mobProfile" aria-label="حسابي" (click)="$event.preventDefault(); !user ? openAuthModal('login') : null"><i data-lucide="user" width="19" aria-hidden="true"></i><span>حسابي</span></a>
+</nav>
+
+<div class="modal" #detailsModal id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <div class="modal-head"><h3 id="modalTitle">تفاصيل الإعلان</h3><button class="close-modal" (click)="closeModal('detailsModal')" aria-label="إغلاق التفاصيل">×</button></div>
+    <div class="modal-body">
+      <div class="modal-img" id="modalImgWrap"></div>
+      <div class="ad-meta" id="modalMeta"></div>
+      <p id="modalLocation" style="color:var(--muted);font-size:13px;margin-top:8px;display:flex;align-items:center;gap:4px"></p>
+      <p id="modalDescription" style="font-size:13px;color:var(--text-2);margin-top:8px;line-height:1.8"></p>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-note"><strong>نصيحة AMANAFARM:</strong> تأكد من مشاهدة الحيوان شخصياً أو عبر مكالمة مرئية قبل الدفع.</div>
+      <div class="modal-actions">
+        <a href="#" id="modalWhatsapp" class="modal-wa" target="_blank" rel="noopener noreferrer" (click)="$event.preventDefault(); selectedAd && addToCart(selectedAd)"><i data-lucide="message-circle" width="15" aria-hidden="true"></i> واتساب</a>
+        <button class="modal-cart" id="modalCartBtn" (click)="selectedAd && addToCart(selectedAd)"><i data-lucide="shopping-cart" width="14" aria-hidden="true"></i> أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" #serviceModal id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle">
+  <div class="modal-card">
+    <div class="modal-head"><h3 id="serviceModalTitle">خدمة قريباً</h3><button class="close-modal" (click)="closeModal('serviceModal')" aria-label="إغلاق">×</button></div>
+    <div class="modal-body" id="serviceModalBody"></div>
+  </div>
+</div>
+
+<div class="overlay" #authOverlay id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authModalHeading">
+  <div class="auth-modal">
+    <div class="auth-banner">
+      <button class="close-auth" (click)="closeModal('authOverlay')" aria-label="إغلاق نافذة تسجيل الدخول">×</button>
+      <div class="banner-logo">
+        <span style="font-size:28px" aria-hidden="true">🌿</span>
+        <div id="authModalHeading"><div style="font-size:18px;font-weight:900">AMANAFARM</div><div style="font-size:10px;opacity:0.72">المنصة الأولى للفلاحة وتربية الحيوانات في تونس</div></div>
+      </div>
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" id="tabLogin" role="tab" aria-selected="true" aria-controls="panelLogin" (click)="switchAuthTab('login')">🔐 دخول</button>
+        <button class="auth-tab" id="tabRegister" role="tab" aria-selected="false" aria-controls="panelRegister" (click)="switchAuthTab('register')">✨ حساب جديد</button>
+      </div>
+    </div>
+    <div class="auth-body">
+      <div class="tab-panel active" id="panelLogin" role="tabpanel" aria-labelledby="tabLogin">
+        <div class="rate-notice" id="loginRateNotice" role="alert">⏳ محاولات كثيرة — يرجى الانتظار دقيقة.</div>
+        <p class="social-coming">⚠️ تسجيل الدخول الاجتماعي سيكون متاحاً قريباً</p>
+        <div class="social-btns"><button class="social-btn disabled-btn" aria-disabled="true">🇬 Google</button><button class="social-btn disabled-btn" aria-disabled="true">f Facebook</button></div>
+        <div class="or-divider"><span>أو بالبريد الإلكتروني</span></div>
+        <div class="field-auth"><label for="loginEmail">البريد الإلكتروني أو رقم الهاتف</label><div class="field-wrap"><input type="text" id="loginEmail" placeholder="exemple@email.com" autocomplete="username" /></div><div class="err-msg" id="loginEmailErr" role="alert">يرجى إدخال بريد أو هاتف صحيح</div></div>
+        <div class="field-auth"><label for="loginPassword">كلمة المرور</label><div class="field-wrap"><input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" autocomplete="current-password" /></div><div class="err-msg" id="loginPasswordErr" role="alert">بيانات الدخول غير صحيحة</div></div>
+        <div class="form-extras"><label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" id="rememberMe" style="accent-color:var(--green)" /> تذكرني (30 يوم)</label><span class="forgot-link" (click)="switchAuthTab('forgot')" role="button" tabindex="0">نسيت كلمة المرور؟</span></div>
+        <button class="submit-btn" id="loginBtn" (click)="doLogin()">🔐 تسجيل الدخول</button>
+        <div class="terms-note">بتسجيل الدخول أنت توافق على <a href="#" (click)="$event.preventDefault(); openLegal('terms')">شروط الاستخدام</a></div>
+      </div>
+      <div class="tab-panel" id="panelRegister" role="tabpanel" aria-labelledby="tabRegister">
+        <div class="steps-indicator" aria-label="مراحل التسجيل">
+          <div class="step-item-r active" id="si1"><div class="step-dot" aria-current="step">1</div><div>معلوماتك</div></div><div class="step-line" id="sl1"></div>
+          <div class="step-item-r" id="si2"><div class="step-dot">2</div><div>الأمان</div></div><div class="step-line" id="sl2"></div>
+          <div class="step-item-r" id="si3"><div class="step-dot">3</div><div>تخصيص</div></div>
+        </div>
+        <div class="reg-step active" id="regStep1">
+          <div class="fields-row"><div class="field-auth"><label for="regFirst">الاسم الأول</label><input type="text" id="regFirst" placeholder="محمد" autocomplete="given-name" /><div class="err-msg" id="regFirstErr">الاسم مطلوب</div></div><div class="field-auth"><label for="regLast">اسم العائلة</label><input type="text" id="regLast" placeholder="البراهمي" autocomplete="family-name" /><div class="err-msg" id="regLastErr">اسم العائلة مطلوب</div></div></div>
+          <div class="field-auth"><label for="regEmail">البريد الإلكتروني</label><input type="email" id="regEmail" placeholder="exemple@email.com" autocomplete="email" /><div class="err-msg" id="regEmailErr">بريد غير صحيح</div></div>
+          <div class="field-auth"><label for="regPhone">رقم الهاتف</label><div class="phone-wrap"><div class="phone-prefix">🇹🇳 +216</div><input type="tel" id="regPhone" placeholder="XX XXX XXX" autocomplete="tel" /></div><div class="err-msg" id="regPhoneErr">رقم غير صحيح</div></div>
+          <div class="step-nav"><button class="submit-btn" (click)="goRegStep(2)">التالي ←</button></div>
+        </div>
+        <div class="reg-step" id="regStep2">
+          <div class="field-auth"><label for="regPassword">كلمة المرور</label><input type="password" id="regPassword" placeholder="8 أحرف على الأقل" autocomplete="new-password" (input)="checkPwStrength($event.target.value)" /><div class="pw-strength-wrap" role="meter" aria-label="قوة كلمة المرور"><div class="pw-strength-bar" id="pwBar"></div></div><div class="pw-strength-label" id="pwLabel"></div><div class="err-msg" id="regPasswordErr">8 أحرف حد أدنى</div></div>
+          <div class="field-auth"><label for="regConfirm">تأكيد كلمة المرور</label><input type="password" id="regConfirm" placeholder="أعد كلمة المرور" autocomplete="new-password" /><div class="err-msg" id="regConfirmErr">كلمتا المرور غير متطابقتين</div></div>
+          <div class="step-nav"><button class="back-btn" (click)="goRegStep(1)">← رجوع</button><button class="submit-btn" (click)="goRegStep(3)">التالي ←</button></div>
+        </div>
+        <div class="reg-step" id="regStep3">
+          <p style="font-size:12.5px;font-weight:800;margin-bottom:10px">اختر تخصصك:</p>
+          <div class="reg-cats" role="radiogroup" aria-label="التخصص">
+            <div class="reg-cat selected" data-cat="تربية الحيوانات" (click)="selectRegCat($event.currentTarget)" role="radio" aria-checked="true" tabindex="0"><div style="font-size:22px">🐑</div><div>تربية الحيوانات</div></div>
+            <div class="reg-cat" data-cat="منتجات فلاحية" (click)="selectRegCat($event.currentTarget)" role="radio" aria-checked="false" tabindex="0"><div style="font-size:22px">🌾</div><div>منتجات فلاحية</div></div>
+            <div class="reg-cat" data-cat="نقل وخدمات" (click)="selectRegCat($event.currentTarget)" role="radio" aria-checked="false" tabindex="0"><div style="font-size:22px">🚚</div><div>نقل وخدمات</div></div>
+          </div>
+          <div class="step-nav"><button class="back-btn" (click)="goRegStep(2)">← رجوع</button><button class="submit-btn" (click)="doRegister()">🎉 إنشاء الحساب</button></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="panelSuccess"><div style="text-align:center;padding:14px"><div style="font-size:50px">✅</div><h2 id="successTitle" style="margin:11px 0 7px;font-size:19px">مرحباً بك!</h2><p id="successSub" style="color:var(--muted);font-size:13px">تم تسجيل دخولك بنجاح.</p><br /><button class="submit-btn" (click)="closeModal('authOverlay')">ابدأ الاستخدام ←</button></div></div>
+      <div class="tab-panel" id="panelForgot">
+        <div style="text-align:center;margin-bottom:16px"><div style="font-size:34px">🔑</div><h3 style="margin-top:7px">استعادة كلمة المرور</h3><p style="font-size:12px;color:var(--muted);margin-top:3px">سنرسل لك رابط الاستعادة</p></div>
+        <div class="field-auth"><label for="forgotInput">البريد الإلكتروني أو الهاتف</label><input type="text" id="forgotInput" placeholder="exemple@email.com" autocomplete="email" /></div>
+        <button class="submit-btn" (click)="doForgot()">📤 إرسال رابط الاستعادة</button>
+        <div style="text-align:center;margin-top:13px"><span class="forgot-link" (click)="switchAuthTab('login')" role="button" tabindex="0">← رجوع للدخول</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="legal-modal" #legalModal id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="legal-card">
+    <div class="legal-head"><h2 id="legalTitle">شروط الاستخدام</h2><button class="close-modal" (click)="closeModal('legalModal')" aria-label="إغلاق">×</button></div>
+    <div class="legal-body" id="legalBody"></div>
+  </div>
+</div>
