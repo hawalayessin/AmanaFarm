@@ -45,3 +45,5 @@ build/
 ### Assets ###
 assets/*.png
 src/assets/*.png
+### Assets ###
+**/assets/
