@@ -1,6 +1,7 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { StateService } from '../../services/state.service';
+import { Subscription } from 'rxjs';
 
 declare const lucide: any;
 
@@ -10,13 +11,15 @@ declare const lucide: any;
   imports: [RouterLink],
   templateUrl: './animal-detail.component.html',
 })
-export class AnimalDetailComponent implements OnInit, AfterViewInit {
+export class AnimalDetailComponent implements OnDestroy, AfterViewInit {
   animal: any = null;
+  private sub: Subscription;
 
-  constructor(private route: ActivatedRoute, private state: StateService) {}
+  constructor(private route: ActivatedRoute, private state: StateService) {
+    this.sub = this.route.paramMap.subscribe(params => this.loadAnimal(Number(params.get('id'))));
+  }
 
-  async ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+  private async loadAnimal(id: number) {
     this.animal = this.state.animals().find(a => a.id === id) || null;
     if (!this.animal) {
       try {
@@ -41,6 +44,10 @@ export class AnimalDetailComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   fmt(n: string | number): string { return this.state.fmtPrice(n); }

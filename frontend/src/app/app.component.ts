@@ -40,6 +40,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   loginAttempts = { count: 0, blockedUntil: 0 };
   private filterTimer: any;
   private registerSubmitting = false;
+  uploadedPhotos: File[] = [];
 
   private readonly API_BASE = 'http://localhost:8081';
 
@@ -95,6 +96,15 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   fmt(n: string | number): string { return this.state.fmtPrice(n); }
 
   esc(s: unknown): string { return this.state.esc(s); }
+
+  fileToDataUrl(file: File): Promise<string> {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => resolve('');
+      reader.readAsDataURL(file);
+    });
+  }
 
   /* ══ AUTH ══ */
   applyAuthState() {
@@ -554,10 +564,12 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   previewPhotos(input: any) {
     const wrap = this.$('photoPreviews');
     if (!wrap) return;
+    this.uploadedPhotos = [];
     wrap.innerHTML = '';
     Array.from(input?.files || []).slice(0, 5).forEach((f: any) => {
       if (f.size > 2 * 1024 * 1024) { this.toast('حجم الصورة يجب أن يكون أقل من 2MB', 'error'); return; }
       if (!['image/jpeg','image/png','image/webp'].includes(f.type)) { this.toast('نوع الملف غير مدعوم', 'error'); return; }
+      this.uploadedPhotos.push(f);
       const url = URL.createObjectURL(f);
       const img = document.createElement('img');
       img.src = url; img.className = 'photo-preview'; img.alt = 'معاينة صورة الإعلان';
@@ -577,7 +589,11 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     const btn = this.$('submitAnnonceBtn') as HTMLButtonElement;
     if (btn) { btn.disabled = true; btn.textContent = '...جاري النشر'; }
 
-    setTimeout(() => {
+    setTimeout(async () => {
+      let imageUrl = '';
+      if (this.uploadedPhotos.length > 0) {
+        imageUrl = await this.fileToDataUrl(this.uploadedPhotos[0]);
+      }
       const newAd: AnimalAd = {
         id: Date.now(),
         name: this.esc(title.substring(0, 100)),
@@ -595,6 +611,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         verified: true,
         phone: phone.replace(/\D/g, '').substring(0, 15),
         description: this.esc(this.sv('addDesc').substring(0, 1000)),
+        imageUrl,
       };
       this.state.addAnimal(newAd);
       this.currentPage = 1;
@@ -614,6 +631,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     ['addTitle','addPrice','addWeight','addDesc','addPhone'].forEach(id => { const el = this.$(id) as HTMLInputElement; if (el) { el.value = ''; el.classList.remove('err'); }});
     (this.$('addWilaya') as HTMLSelectElement).value = '';
     (this.$('addGender') as HTMLSelectElement).value = '';
+    this.uploadedPhotos = [];
     this.$('photoPreviews')!.innerHTML = '';
     document.querySelectorAll('#addCatGrid .cat-btn').forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-checked','false'); });
     const first = document.querySelector('#addCatGrid .cat-btn') as HTMLElement;

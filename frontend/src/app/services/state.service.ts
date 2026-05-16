@@ -165,6 +165,7 @@ export class StateService {
 
   private apiBase = 'http://localhost:8081';
   private _token: string | null = null;
+  private static readonly LS_ANIMALS = 'af_animals_cache';
 
   /** Profil affiché — toujours synchronisé avec le token tant que la session est ouverte */
   private static readonly LS_USER = 'af_user';
@@ -193,6 +194,8 @@ export class StateService {
     this.cart.set(LS.get<AnimalAd[]>('af_cart', []));
     this.favs.set(LS.get<number[]>('af_favs', []));
     this.notifs.set(LS.get<Notification[]>('af_notifs', []));
+    const cached = LS.get<AnimalAd[]>(StateService.LS_ANIMALS, []);
+    if (cached.length) this.animals.set(cached);
     this.loadAll();
   }
 
@@ -252,7 +255,18 @@ export class StateService {
       const res = await fetch(`${this.apiBase}/api/animals`);
       if (!res.ok) return;
       const data = await res.json();
-      this.animals.set((data || []).map((a: any) => this.mapAnimal(a)));
+      const local = this.animals();
+      const localMap = new Map(local.filter(a => a.imageUrl?.startsWith('data:')).map(a => [a.id, a.imageUrl]));
+      const mapped = (data || []).map((a: any) => {
+        const m = this.mapAnimal(a);
+        const localUrl = localMap.get(Number(a.id)) || localMap.get(a.id);
+        if (localUrl) m.imageUrl = localUrl;
+        return m;
+      });
+      const localOnly = local.filter(a => !mapped.find((m: AnimalAd) => m.id === a.id));
+      const merged = [...localOnly, ...mapped];
+      this.animals.set(merged);
+      LS.set(StateService.LS_ANIMALS, merged);
     } catch {}
   }
 
@@ -271,9 +285,10 @@ export class StateService {
   }
 
   async addAnimal(ad: AnimalAd) {
-    this.animals.update(list => [ad, ...list]);
+    const tempId = ad.id;
+    this.animals.update(list => { const next = [ad, ...list]; LS.set(StateService.LS_ANIMALS, next); return next; });
     try {
-      await fetch(`${this.apiBase}/api/animals`, {
+      const res = await fetch(`${this.apiBase}/api/animals`, {
         method: 'POST', headers: this.getHeaders(),
         body: JSON.stringify({
           title: ad.name, description: ad.description, category: ad.category,
@@ -284,6 +299,14 @@ export class StateService {
           images: ad.imageUrl ? [ad.imageUrl] : [],
         }),
       });
+      if (res.ok) {
+        const saved = await res.json();
+        this.animals.update(list => {
+          const next = list.map(a => a.id === tempId && saved.id ? { ...a, id: saved.id } : a);
+          LS.set(StateService.LS_ANIMALS, next);
+          return next;
+        });
+      }
     } catch {}
   }
 
