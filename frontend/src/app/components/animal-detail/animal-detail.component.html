@@ -13,7 +13,7 @@
   <div style="display:flex;flex-direction:column;gap:16px">
     <div style="background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden">
       <div style="position:relative;height:420px;overflow:hidden;background:#e8f0ea">
-        <img [src]="'assets/bagraa.jpg'" alt="{{ animal.name }}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:80px>{{ animal.emoji || '🐑' }}</span>'">
+        <img [src]="animal.imageUrl || 'assets/bagraa.jpg'" alt="{{ animal.name }}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.previousElementSibling.style.display='none';this.parentElement.innerHTML='<span style=font-size:80px>🐑</span>'">
         <div style="position:absolute;top:14px;right:14px;display:flex;flex-direction:column;gap:6px">
           <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:800;color:#fff;background:var(--gold)">مميز</span>
           <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:800;color:#fff;background:var(--green)">جديد</span>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, HostListener, effect } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, NgZone, HostListener, effect } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { StateService, AnimalAd, UserInfo } from './services/state.service';
 
@@ -43,11 +43,17 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private readonly API_BASE = 'http://localhost:8081';
 
-  constructor(public state: StateService, private router: Router) {
+  constructor(public state: StateService, private router: Router, private zone: NgZone) {
     effect(() => { this.user = state.user(); });
     effect(() => { this.cart = state.cart(); });
     effect(() => { this.notifs = state.notifs(); });
-    effect(() => { this.animals = state.animals(); });
+    effect(() => {
+      this.animals = state.animals();
+      if (this.adsGridRef?.nativeElement && this.animals.length) {
+        this.renderAnimals(this.animals);
+        this.updateSidebarStats();
+      }
+    });
   }
 
   ngOnInit() {}  // signals synced via effect() in constructor
@@ -60,10 +66,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       if (grid) { grid.addEventListener('click', (ev: Event) => this.handleGridClick(ev)); }
       const pg = this.paginationRef?.nativeElement;
       if (pg) { pg.addEventListener('click', (ev: Event) => this.handlePaginationClick(ev)); }
-      setTimeout(() => {
-        this.renderAnimals(this.animals);
-        this.updateSidebarStats();
-      }, 200);
     });
   }
 
@@ -385,10 +387,11 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     grid.innerHTML = paginated.map((a: any) => {
       const liked = this.state.isFav(a.id) ? ' liked' : '';
       const chips = [a.weight, a.gender, a.age, a.healthStatus].filter(Boolean).map((x: string) => `<div class="ad-chip">${this.esc(x)}</div>`).join('');
+      const imgHtml = a.imageUrl ? `<img src="${this.esc(a.imageUrl)}" alt="${this.esc(a.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">` : '';
       return `
         <article class="ad-card" data-id="${Number(a.id)}" tabindex="0" role="article" aria-label="${this.esc(a.name)} — ${this.fmt(a.price)} دت">
           <div class="ad-photo">
-            <span class="ad-photo-emoji" aria-hidden="true">${a.emoji || '🐑'}</span>
+            ${imgHtml}<span class="ad-photo-emoji" aria-hidden="true"${a.imageUrl ? ' style="display:none"' : ''}>${a.emoji || '🐑'}</span>
             <div class="card-badges">
               ${a.featured ? '<span class="card-badge badge-featured">⭐ مميز</span>' : '<span class="card-badge badge-new">جديد</span>'}
               ${a.verified ? '<span class="card-badge badge-verified">موثق ✓</span>' : ''}
@@ -437,21 +440,23 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private handleGridClick(e: Event) {
-    const target = e.target as HTMLElement;
-    const card = target.closest('.ad-card') as HTMLElement;
-    const actionBtn = target.closest('[data-action]') as HTMLElement;
-    if (actionBtn) {
-      const action = actionBtn.dataset.action;
-      const id = Number(actionBtn.dataset.id);
-      if (action === 'detail') { e.preventDefault(); this.goAnimalDetail(id); }
-      else if (action === 'wa') { e.stopPropagation(); this.openWa(id); }
-      else if (action === 'fav') { e.stopPropagation(); this.toggleFav(e, id); }
-      return;
-    }
-    if (card) {
-      const id = Number(card.dataset.id);
-      if (id) this.goAnimalDetail(id);
-    }
+    this.zone.run(() => {
+      const target = e.target as HTMLElement;
+      const card = target.closest('.ad-card') as HTMLElement;
+      const actionBtn = target.closest('[data-action]') as HTMLElement;
+      if (actionBtn) {
+        const action = actionBtn.dataset.action;
+        const id = Number(actionBtn.dataset.id);
+        if (action === 'detail') { e.preventDefault(); this.goAnimalDetail(id); }
+        else if (action === 'wa') { e.stopPropagation(); this.openWa(id); }
+        else if (action === 'fav') { e.stopPropagation(); this.toggleFav(e, id); }
+        return;
+      }
+      if (card) {
+        const id = Number(card.dataset.id);
+        if (id) this.goAnimalDetail(id);
+      }
+    });
   }
 
   private handlePaginationClick(e: Event) {
@@ -499,6 +504,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   gotoPage(n: number) { this.currentPage = n; this.applyFilter(); document.getElementById('market')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
   goAnimalDetail(id: number) {
+    window.scrollTo(0, 0);
     void this.router.navigate(['/detail', id]);
   }
 

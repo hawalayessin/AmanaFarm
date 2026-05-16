@@ -1,16 +1,15 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { StateService } from '../../services/state.service';
-
-declare const lucide: any;
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './about.component.html',
 })
-export class AboutComponent {
+export class AboutComponent implements AfterViewInit {
   totalAnimals = 0;
   totalWorkers = 0;
   totalProducts = 0;
@@ -24,8 +23,29 @@ export class AboutComponent {
   }
 
   ngAfterViewInit() {
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          const parent = entry.target.parentElement;
+          if (parent) {
+            const siblings = parent.querySelectorAll('.about-fade-up');
+            siblings.forEach((el, i) => {
+              if (!el.classList.contains('visible')) {
+                setTimeout(() => el.classList.add('visible'), i * 80);
+              }
+            });
+          }
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.about-fade-up').forEach(el => observer.observe(el));
   }
 
   get totalListings() { return this.totalAnimals + this.totalProducts + this.totalWholesale; }
+
+  openAddPanel() {
+    window.location.href = '/';
+  }
 }

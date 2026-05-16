@@ -1,34 +1,269 @@
-<section style="background:linear-gradient(135deg,var(--green-dark),var(--green-mid),var(--green));padding:60px 40px;color:#fff;text-align:center">
-  <div style="max-width:700px;margin:auto">
-    <h1 style="font-size:36px;font-weight:900;margin-bottom:12px">منصة الفلاحة والحيوانات</h1>
-    <p style="font-size:14px;opacity:.85;max-width:500px;margin:auto;margin-bottom:24px">سوق رقمي متكامل يربط المربين والمستثمرين وجميع الخدمات الفلاحية في تونس</p>
-    <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap">
-      <div><strong style="font-size:26px;color:#ffd54f">{{ totalAnimals }}</strong><div style="font-size:12px;opacity:.75">إعلان حيوانات</div></div>
-      <div><strong style="font-size:26px;color:#ffd54f">{{ totalListings }}</strong><div style="font-size:12px;opacity:.75">إعلان نشط</div></div>
-      <div><strong style="font-size:26px;color:#ffd54f">24</strong><div style="font-size:12px;opacity:.75">ولاية مغطاة</div></div>
+<section class="about-hero">
+  <div class="about-hero-deco d1"></div>
+  <div class="about-hero-deco d2"></div>
+  <div class="about-hero-inner">
+    <div class="about-hero-tag"><span class="ann-dot" style="width:7px;height:7px;border-radius:50%;background:#6ee89a;flex-shrink:0;animation:pulse 2s infinite;display:inline-block"></span> قصتنا ومهمتنا</div>
+    <h1>نحن <em>AMANAFARM</em><br>نبنيها معاك</h1>
+    <p>منصة تونسية 100% — ولدت من قلب الريف التونسي لتربط المربين والمستثمرين وتحوّل طريقة تسويق الحيوانات والمنتجات الفلاحية.</p>
+    <div class="about-hero-btns">
+      <a routerLink="/animals" class="btn-solid">🐑 تصفح السوق</a>
+      <a routerLink="/about" fragment="contact" class="btn-outline">📞 تواصل معنا</a>
+    </div>
+    <div class="about-stats">
+      <div class="about-stat"><div class="about-stat-num">+25K</div><div class="about-stat-lbl">مستخدم نشط</div></div>
+      <div class="about-stat"><div class="about-stat-num">{{ totalListings > 0 ? '+' + totalListings : '+15K' }}</div><div class="about-stat-lbl">إعلان منشور</div></div>
+      <div class="about-stat"><div class="about-stat-num">24</div><div class="about-stat-lbl">ولاية مغطاة</div></div>
+      <div class="about-stat"><div class="about-stat-num">+8K</div><div class="about-stat-lbl">صفقة ناجحة</div></div>
+      <div class="about-stat"><div class="about-stat-num">4.9 ★</div><div class="about-stat-lbl">تقييم المستخدمين</div></div>
     </div>
   </div>
 </section>
 
-<section style="padding:52px 40px;background:#fff">
-  <div style="max-width:1000px;margin:auto">
-    <h2 style="font-size:24px;font-weight:900;margin-bottom:12px">لماذا AMANAFARM؟</h2>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
-      <div style="background:var(--bg);border-radius:14px;padding:24px;text-align:center">
-        <div style="font-size:36px;margin-bottom:10px">🤝</div>
-        <h3 style="font-size:15px;font-weight:900;margin-bottom:6px">تواصل مباشر</h3>
-        <p style="font-size:13px;color:var(--muted)">تحدث مع البائعين والمشترين مباشرة عبر واتساب دون وسيط</p>
+<section class="about-section alt">
+  <div class="sec-label">📖 قصتنا</div>
+  <h2 class="sec-title">لماذا أنشأنا AMANAFARM؟</h2>
+  <p class="sec-sub">رأينا الفلاح التونسي يعاني وحيداً — بائع يجول في الأسواق الأسبوعية، ومشترٍ لا يجد ما يبحث عنه قريباً منه. قررنا أن نغيّر هذا.</p>
+
+  <div class="about-story-grid">
+    <div class="about-story-text about-fade-up">
+      <p>في السوق التقليدي، المشتري يضيع وقتاً كبيراً في البحث والسؤال، والبائع لا يصل دائماً إلى العملاء المناسبين. لذلك أنشأنا AMANAFARM لتكون نقطة لقاء رقمية بين الطرفين.</p>
+      <p>هدفنا تنظيم الإعلانات، تسهيل البحث حسب الولاية والسعر والنوع، وإضافة طبقة ثقة من خلال البائعين الموثوقين، الصور الواضحة، ومعلومات الحيوان الدقيقة.</p>
+      <p>المنصة ليست مجرد موقع إعلانات — بل نظام متكامل لتطوير تجربة الفلاحة وتربية الحيوانات في تونس من الشمال إلى الجنوب.</p>
+      <div class="about-highlight-box">
+        <div class="about-hb-icon">🏆</div>
+        <div>
+          <div class="about-hb-title">المنصة الأولى المتخصصة في الفلاحة بتونس</div>
+          <div class="about-hb-text">كل إعلان يمر بمراجعة يدوية قبل النشر لضمان جودة المحتوى وأمان المعاملات.</div>
+        </div>
       </div>
-      <div style="background:var(--bg);border-radius:14px;padding:24px;text-align:center">
-        <div style="font-size:36px;margin-bottom:10px">🔒</div>
-        <h3 style="font-size:15px;font-weight:900;margin-bottom:6px">معاملات آمنة</h3>
-        <p style="font-size:13px;color:var(--muted)">بائعون موثوقون، مراجعة يدوية، وشفافية كاملة</p>
+    </div>
+
+    <div class="about-story-visual about-fade-up">
+      <div class="about-story-img-card">
+        <h3>رقمنة السوق الفلاحي التونسي</h3>
+        <p>نهدف إلى بناء البنية التحتية الرقمية التي يحتاجها كل فلاح ومربٍ في تونس — من أبسط إعلان مجاني إلى منظومة متكاملة من الخدمات.</p>
+        <div class="about-story-tags">
+          <span class="about-s-tag">📍 24 ولاية</span>
+          <span class="about-s-tag">🔒 معاملات آمنة</span>
+          <span class="about-s-tag">🚀 مجاني للبدء</span>
+          <span class="about-s-tag">💬 دعم 24/7</span>
+        </div>
       </div>
-      <div style="background:var(--bg);border-radius:14px;padding:24px;text-align:center">
-        <div style="font-size:36px;margin-bottom:10px">📍</div>
-        <h3 style="font-size:15px;font-weight:900;margin-bottom:6px">مصمم لتونس</h3>
-        <p style="font-size:13px;color:var(--muted)">24 ولاية، أسعار بالدينار التونسي، وتصنيفات محلية</p>
+      <div class="about-story-float">
+        <div class="about-sf-icon">🌱</div>
+        <div>
+          <div class="about-sf-title">المنصة الأولى المتخصصة</div>
+          <div class="about-sf-sub">في الفلاحة والحيوانات بتونس</div>
+        </div>
+      </div>
+      <div class="about-story-float">
+        <div class="about-sf-icon">🛡️</div>
+        <div>
+          <div class="about-sf-title">بائعون موثوقون ومراجَعون</div>
+          <div class="about-sf-sub">كل إعلان يمر بمراجعة قبل النشر</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<section class="about-section tinted">
+  <div class="sec-label">💚 قيمنا</div>
+  <h2 class="sec-title">ما الذي يوجّهنا كل يوم؟</h2>
+  <p class="sec-sub">ليست مجرد كلمات على الورق — هي المبادئ التي نتخذ بها كل قرار.</p>
+  <div class="about-values-grid">
+    <div class="about-value-card about-fade-up">
+      <div class="about-v-icon">🤝</div>
+      <div class="about-v-title">الثقة أولاً</div>
+      <div class="about-v-text">بنينا المنصة على الشفافية الكاملة — كل معلومة حقيقية، كل بائع موثوق، وكل وعد نوفي به.</div>
+    </div>
+    <div class="about-value-card about-fade-up">
+      <div class="about-v-icon">🌿</div>
+      <div class="about-v-title">خدمة الريف التونسي</div>
+      <div class="about-v-text">فكرنا بالفلاح من قابس إلى جندوبة — المنصة مصممة للسوق المحلي بشكل حقيقي وعملي.</div>
+    </div>
+    <div class="about-value-card about-fade-up">
+      <div class="about-v-icon">⚡</div>
+      <div class="about-v-title">السهولة فوق كل شيء</div>
+      <div class="about-v-text">إضافة إعلان في أقل من دقيقتين — هذا معيارنا. إذا كان صعباً، نعيد تصميمه حتى يصبح سهلاً.</div>
+    </div>
+    <div class="about-value-card about-fade-up">
+      <div class="about-v-icon">🔒</div>
+      <div class="about-v-title">الأمان لا تفاوض فيه</div>
+      <div class="about-v-text">حماية بيانات المستخدمين، ضمان استرداد الأموال، ومراجعة الإعلانات — خطوط حمراء لا نتجاوزها.</div>
+    </div>
+    <div class="about-value-card about-fade-up">
+      <div class="about-v-icon">📈</div>
+      <div class="about-v-title">النمو المشترك</div>
+      <div class="about-v-text">نجاحنا مرتبط بنجاح كل فلاح على المنصة — عندما يكسب هو، نكسب نحن.</div>
+    </div>
+    <div class="about-value-card about-fade-up">
+      <div class="about-v-icon">💡</div>
+      <div class="about-v-title">الابتكار المستمر</div>
+      <div class="about-v-text">نستمع للمربين ونطور المنصة باستمرار — الاستشارة البيطرية، النقل، التتبع الصحي. هذا مجرد بداية.</div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section alt">
+  <div class="sec-label">🎯 رؤيتنا ومهمتنا</div>
+  <h2 class="sec-title">إلى أين نتجه؟</h2>
+  <p class="sec-sub">نبني اليوم ما سيكون منصة الفلاحة الرائدة في شمال إفريقيا غداً.</p>
+  <div class="about-mission-wrap">
+    <div class="about-mission-box about-fade-up">
+      <div class="about-mission-icon">🔭</div>
+      <h3>رؤيتنا</h3>
+      <p>أن تصبح AMANAFARM المنصة الأولى في تونس وشمال إفريقيا لبيع وشراء الحيوانات والمنتجات والخدمات الفلاحية — مرجعاً لكل فلاح ومربٍ ومستثمر.</p>
+    </div>
+    <div class="about-mission-box about-fade-up">
+      <div class="about-mission-icon">🚀</div>
+      <h3>مهمتنا</h3>
+      <p>ربط الفلاحين والمربين بالمشترين والخدمات بطريقة رقمية سهلة وموثوقة — بدون وسطاء وبدون عمولات مخفية. تكنولوجيا تخدم الناس لا أن تُعقّد حياتهم.</p>
+    </div>
+  </div>
+</section>
+
+<section class="about-section tinted">
+  <div class="sec-label">⚙️ كيف نعمل</div>
+  <h2 class="sec-title">كيف نخدمك؟</h2>
+  <p class="sec-sub">تجربة واضحة من أول بحث إلى إتمام الصفقة.</p>
+  <div class="about-steps-grid">
+    <div class="about-step-card about-fade-up">
+      <div class="about-step-num">1</div>
+      <div class="about-step-title">تصفح</div>
+      <div class="about-step-text">شوف الحيوانات والمنتجات حسب النوع، الولاية، السعر والمنطقة بفلترة سريعة وذكية.</div>
+    </div>
+    <div class="about-step-card about-fade-up">
+      <div class="about-step-num">2</div>
+      <div class="about-step-title">قارن</div>
+      <div class="about-step-text">قارن بين الإعلانات، الصور الواضحة، الأسعار، ومعلومات البائع الموثوق قبل القرار.</div>
+    </div>
+    <div class="about-step-card about-fade-up">
+      <div class="about-step-num">3</div>
+      <div class="about-step-title">تواصل</div>
+      <div class="about-step-text">تواصل مباشرة مع البائع أو مقدم الخدمة عبر الهاتف أو واتساب بضغطة واحدة.</div>
+    </div>
+    <div class="about-step-card about-fade-up">
+      <div class="about-step-num">4</div>
+      <div class="about-step-title">أتمم الصفقة</div>
+      <div class="about-step-text">رتّب النقل، الفحص البيطري، أو الشراء بطريقة أسهل وأكثر أماناً من أي وقت مضى.</div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section alt">
+  <div class="sec-label">👥 فريقنا</div>
+  <h2 class="sec-title">الأيادي التي بنت المنصة</h2>
+  <p class="sec-sub">فريق تونسي شاب متحمس لتحويل القطاع الفلاحي رقمياً من الداخل.</p>
+  <div class="about-team-grid">
+    <div class="about-team-card about-fade-up">
+      <div class="about-t-avt">👨‍💼</div>
+      <div class="about-t-name">أحمد التليلي</div>
+      <div class="about-t-role">مؤسس & CEO</div>
+      <div class="about-t-bio">خبرة 10 سنوات في الفلاحة والتكنولوجيا. مؤمن بأن الريف التونسي يستحق أفضل الأدوات الرقمية.</div>
+    </div>
+    <div class="about-team-card about-fade-up">
+      <div class="about-t-avt">👩‍💻</div>
+      <div class="about-t-name">مريم الزيتوني</div>
+      <div class="about-t-role">مديرة التقنية</div>
+      <div class="about-t-bio">مهندسة برمجيات متخصصة في منصات التجارة الإلكترونية. قادت بناء AMANAFARM من الصفر.</div>
+    </div>
+    <div class="about-team-card about-fade-up">
+      <div class="about-t-avt">👨‍🌾</div>
+      <div class="about-t-name">الحبيب الصغير</div>
+      <div class="about-t-role">مدير العمليات</div>
+      <div class="about-t-bio">مربي ماشية سابق تحوّل إلى رجل أعمال. يفهم احتياجات الفلاح من الداخل بشكل حقيقي.</div>
+    </div>
+    <div class="about-team-card about-fade-up">
+      <div class="about-t-avt">👩‍🎨</div>
+      <div class="about-t-name">رنا بن خليل</div>
+      <div class="about-t-role">مديرة المنتج</div>
+      <div class="about-t-bio">متخصصة في تجربة المستخدم وتصميم منتجات سهلة الاستخدام للمجتمعات الريفية.</div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section tinted">
+  <div class="sec-label">⏳ رحلتنا</div>
+  <h2 class="sec-title">كيف وصلنا إلى هنا؟</h2>
+  <p class="sec-sub">من فكرة بسيطة في مقهى بسوسة إلى أكبر منصة فلاحية في تونس.</p>
+  <div class="about-timeline">
+    <div class="about-tl-item about-fade-up">
+      <div class="about-tl-dot"></div>
+      <div class="about-tl-year">2022 — البداية</div>
+      <div class="about-tl-title">الفكرة الأولى</div>
+      <div class="about-tl-text">تعرّف أحمد على مشكل الفلاح في إيجاد مشترين — قرر بناء حل بسيط يجمع البائعين والمشترين في مكان واحد.</div>
+    </div>
+    <div class="about-tl-item about-fade-up">
+      <div class="about-tl-dot"></div>
+      <div class="about-tl-year">2023 — الانطلاق</div>
+      <div class="about-tl-title">إطلاق النسخة الأولى</div>
+      <div class="about-tl-text">أول 500 إعلان، أول 1000 مستخدم — الاستجابة كانت مدهشة. أدركنا أن الفلاح التونسي ينتظر هذا منذ زمن.</div>
+    </div>
+    <div class="about-tl-item about-fade-up">
+      <div class="about-tl-dot"></div>
+      <div class="about-tl-year">2024 — النمو</div>
+      <div class="about-tl-title">التوسع والخدمات</div>
+      <div class="about-tl-text">إضافة خدمات النقل، الاستشارة البيطرية، والمنتجات الفلاحية. تجاوزنا 10,000 مستخدم نشط.</div>
+    </div>
+    <div class="about-tl-item active about-fade-up">
+      <div class="about-tl-dot"></div>
+      <div class="about-tl-year">2025–2026 — الحاضر</div>
+      <div class="about-tl-title">المنصة رقم 1 في تونس 🏆</div>
+      <div class="about-tl-text">+25,000 مستخدم، +15,000 إعلان، تغطية 24 ولاية. والأفضل لا يزال قادماً.</div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section alt" id="contact">
+  <div class="sec-label">📞 تواصل معنا</div>
+  <h2 class="sec-title">نحن هنا لمساعدتك</h2>
+  <p class="sec-sub">سواء كان عندك سؤال، اقتراح، أو تريد الانضمام لفريقنا — دائماً مرحباً بك.</p>
+  <div class="about-contact-grid">
+    <div class="about-contact-card about-fade-up">
+      <div class="about-cc-icon">✉️</div>
+      <div>
+        <div class="about-cc-label">البريد الإلكتروني</div>
+        <div class="about-cc-val">contact&#64;amanafarm.tn</div>
+        <div class="about-cc-sub">نرد في ظرف 24 ساعة</div>
+      </div>
+    </div>
+    <div class="about-contact-card about-fade-up">
+      <div class="about-cc-icon">📱</div>
+      <div>
+        <div class="about-cc-label">الهاتف ودعم واتساب</div>
+        <div class="about-cc-val">+216 XX XXX XXX</div>
+        <div class="about-cc-sub">الأيام المفتوحة 9:00 — 18:00</div>
+      </div>
+    </div>
+    <div class="about-contact-card about-fade-up">
+      <div class="about-cc-icon">📍</div>
+      <div>
+        <div class="about-cc-label">المقر الرئيسي</div>
+        <div class="about-cc-val">تونس العاصمة</div>
+        <div class="about-cc-sub">مراكز خدمة في صفاقس وسوسة</div>
+      </div>
+    </div>
+    <div class="about-contact-card about-fade-up">
+      <div class="about-cc-icon">💼</div>
+      <div>
+        <div class="about-cc-label">العمل معنا</div>
+        <div class="about-cc-val">jobs&#64;amanafarm.tn</div>
+        <div class="about-cc-sub">نحن نبحث عن مواهب تونسية دائماً</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="about-cta-section">
+  <div class="about-cta-box">
+    <div class="about-cta-text">
+      <h2>مستعد تنضم لعائلة AMANAFARM؟</h2>
+      <p>أول إعلانك مجاني وبدون أي التزام. +25 ألف مستخدم ينتظرون ما تعرضه.</p>
+    </div>
+    <div class="about-cta-btns">
+      <button class="about-cta-btn-white" (click)="openAddPanel()">＋ أعلن مجاناً الآن</button>
+      <a routerLink="/animals" class="about-cta-btn-ghost">🔍 تصفح الإعلانات</a>
+    </div>
+  </div>
+</div>

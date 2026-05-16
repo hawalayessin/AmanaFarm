@@ -32,6 +32,7 @@ export class AnimalDetailComponent implements OnInit, AfterViewInit {
             sellerRating: 4.8, featured: a.featured || false,
             verified: a.trustedSeller || false,
             description: a.description || '',
+            imageUrl: a.images?.[0] || '',
           };
         }
       } catch {}
