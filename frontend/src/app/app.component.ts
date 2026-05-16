@@ -56,6 +56,10 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     setTimeout(() => {
       if (typeof lucide !== 'undefined') lucide.createIcons();
       this.applyAuthState();
+      const grid = this.adsGridRef?.nativeElement;
+      if (grid) { grid.addEventListener('click', (ev: Event) => this.handleGridClick(ev)); }
+      const pg = this.paginationRef?.nativeElement;
+      if (pg) { pg.addEventListener('click', (ev: Event) => this.handlePaginationClick(ev)); }
       setTimeout(() => {
         this.renderAnimals(this.animals);
         this.updateSidebarStats();
@@ -379,17 +383,17 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.currentPage > totalPages) this.currentPage = 1;
     const paginated = list.slice((this.currentPage - 1) * this.PAGE_SIZE, this.currentPage * this.PAGE_SIZE);
     grid.innerHTML = paginated.map((a: any) => {
-      const liked = this.state.isFav(a.id) ? 'liked' : '';
+      const liked = this.state.isFav(a.id) ? ' liked' : '';
       const chips = [a.weight, a.gender, a.age, a.healthStatus].filter(Boolean).map((x: string) => `<div class="ad-chip">${this.esc(x)}</div>`).join('');
       return `
-        <article class="ad-card" data-id="${Number(a.id)}" tabindex="0" role="article" aria-label="${this.esc(a.name)} — ${this.fmt(a.price)} دت" onclick="document.querySelector('app-root')?.goAnimalDetail(${Number(a.id)})">
+        <article class="ad-card" data-id="${Number(a.id)}" tabindex="0" role="article" aria-label="${this.esc(a.name)} — ${this.fmt(a.price)} دت">
           <div class="ad-photo">
             <span class="ad-photo-emoji" aria-hidden="true">${a.emoji || '🐑'}</span>
             <div class="card-badges">
               ${a.featured ? '<span class="card-badge badge-featured">⭐ مميز</span>' : '<span class="card-badge badge-new">جديد</span>'}
               ${a.verified ? '<span class="card-badge badge-verified">موثق ✓</span>' : ''}
             </div>
-            <button class="heart-btn${liked}" data-id="${Number(a.id)}" onclick="document.querySelector('app-root')?.toggleFav(event, ${Number(a.id)})" aria-label="${liked ? 'إزالة من المفضلة' : 'إضافة للمفضلة'}" aria-pressed="${liked ? 'true' : 'false'}">
+            <button class="heart-btn${liked}" data-action="fav" data-id="${Number(a.id)}" aria-label="${liked ? 'إزالة من المفضلة' : 'إضافة للمفضلة'}" aria-pressed="${liked ? 'true' : 'false'}">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
             </button>
           </div>
@@ -406,8 +410,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
             <div class="ad-bottom">
               <div class="ad-price">${this.fmt(a.price)} <span>دت</span></div>
               <div class="card-actions">
-                <button class="details-btn" onclick="document.querySelector('app-root')?.goAnimalDetail(${Number(a.id)})">تفاصيل</button>
-                <button class="whatsapp-btn" onclick="document.querySelector('app-root')?.openWa(${Number(a.id)})">واتساب</button>
+                <button class="details-btn" data-action="detail" data-id="${Number(a.id)}">تفاصيل</button>
+                <button class="whatsapp-btn" data-action="wa" data-id="${Number(a.id)}">واتساب</button>
               </div>
             </div>
           </div>
@@ -426,10 +430,35 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     let start = Math.max(1, this.currentPage - Math.floor(maxShow / 2));
     let end = Math.min(total, start + maxShow - 1);
     if (end - start + 1 < maxShow) start = Math.max(1, end - maxShow + 1);
-    if (start > 1) html += `<button class="page-btn" onclick="document.querySelector('app-root')?.gotoPage(1)">1</button>${start > 2 ? '<span style="align-self:center;color:var(--muted)">…</span>' : ''}`;
-    for (let i = start; i <= end; i++) html += `<button class="page-btn${i === this.currentPage ? ' active' : ''}" onclick="document.querySelector('app-root')?.gotoPage(${i})">${i}</button>`;
-    if (end < total) html += `${end < total - 1 ? '<span style="align-self:center;color:var(--muted)">…</span>' : ''}<button class="page-btn" onclick="document.querySelector('app-root')?.gotoPage(${total})">${total}</button>`;
+    if (start > 1) html += `<button class="page-btn" data-page="1">1</button>${start > 2 ? '<span style="align-self:center;color:var(--muted)">…</span>' : ''}`;
+    for (let i = start; i <= end; i++) html += `<button class="page-btn${i === this.currentPage ? ' active' : ''}" data-page="${i}">${i}</button>`;
+    if (end < total) html += `${end < total - 1 ? '<span style="align-self:center;color:var(--muted)">…</span>' : ''}<button class="page-btn" data-page="${total}">${total}</button>`;
     pg.innerHTML = html;
+  }
+
+  private handleGridClick(e: Event) {
+    const target = e.target as HTMLElement;
+    const card = target.closest('.ad-card') as HTMLElement;
+    const actionBtn = target.closest('[data-action]') as HTMLElement;
+    if (actionBtn) {
+      const action = actionBtn.dataset.action;
+      const id = Number(actionBtn.dataset.id);
+      if (action === 'detail') { e.preventDefault(); this.goAnimalDetail(id); }
+      else if (action === 'wa') { e.stopPropagation(); this.openWa(id); }
+      else if (action === 'fav') { e.stopPropagation(); this.toggleFav(e, id); }
+      return;
+    }
+    if (card) {
+      const id = Number(card.dataset.id);
+      if (id) this.goAnimalDetail(id);
+    }
+  }
+
+  private handlePaginationClick(e: Event) {
+    const btn = (e.target as HTMLElement).closest('.page-btn') as HTMLElement;
+    if (btn && btn.dataset.page) {
+      this.gotoPage(Number(btn.dataset.page));
+    }
   }
 
   updateSidebarStats() {
@@ -499,8 +528,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   openWa(id: number) {
     const a = this.animals.find(x => x.id === id);
-    if (!a) return;
+    if (!a) { this.toast('الإعلان غير موجود', 'error'); return; }
     let phone = String(a.phone || '').replace(/\D/g, '');
+    if (!phone) { this.toast('رقم الهاتف غير متوفر لهذا الإعلان', 'error'); return; }
     if (phone.length === 8) phone = '216' + phone;
     if (!/^\d{11,12}$/.test(phone)) { this.toast('رقم الهاتف غير صحيح', 'error'); return; }
     const name = a.name.replace(/[^\u0600-\u06FFa-zA-Z0-9 ]/g, '').substring(0, 50);

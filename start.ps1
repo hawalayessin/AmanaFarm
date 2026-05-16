@@ -22,19 +22,32 @@ if ($connections) {
     Write-Host "Port $port is already free." -ForegroundColor Green
 }
 
+$jar = Join-Path $projectRoot "backend\target\amanafarm-backend-0.0.1-SNAPSHOT.jar"
+if (!(Test-Path $jar)) {
+    Write-Host "Building backend with Maven..." -ForegroundColor Cyan
+    $mvnw = Join-Path $projectRoot "backend\mvnw.cmd"
+    if (!(Test-Path $mvnw)) { Write-Host "Error: mvnw.cmd not found" -ForegroundColor Red; exit 1 }
+    Push-Location (Join-Path $projectRoot "backend")
+    & $mvnw clean package -DskipTests -q
+    Pop-Location
+}
+
+Write-Host "Starting backend on port $port..." -ForegroundColor Cyan
+$backendJob = Start-Job -ScriptBlock { param($j) java -jar $j } -ArgumentList $jar
+Start-Sleep -Seconds 8
+
 if ($Frontend) {
     $frontendDir = Join-Path $projectRoot "frontend"
     if (Test-Path $frontendDir) {
-        Write-Host "Starting frontend..." -ForegroundColor Cyan
-        Start-Process -FilePath "cmd.exe" -ArgumentList "/c npm start" -WorkingDirectory $frontendDir -NoNewWindow
+        Write-Host "Starting frontend on http://localhost:4200..." -ForegroundColor Cyan
+        Start-Process -FilePath "cmd.exe" -ArgumentList "/c npm start" -WorkingDirectory $frontendDir
     }
 }
 
-$backendDir = Join-Path $projectRoot "backend"
-if (Test-Path (Join-Path $backendDir "mvnw.cmd")) {
-    Write-Host "Starting backend on port $port..." -ForegroundColor Cyan
-    & (Join-Path $backendDir "mvnw.cmd") spring-boot:run
-} else {
-    Write-Host "Error: mvnw.cmd not found in $backendDir" -ForegroundColor Red
-    exit 1
-}
+Write-Host "`nBackend running on http://localhost:$port" -ForegroundColor Green
+if ($Frontend) { Write-Host "Frontend running on http://localhost:4200" -ForegroundColor Green }
+Write-Host "Press Ctrl+C to stop." -ForegroundColor Gray
+
+while ($true) { Start-Sleep -Seconds 1 }
+
+Remove-Job $backendJob -Force
