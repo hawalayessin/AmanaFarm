@@ -1,0 +1,105 @@
+<div style="background:linear-gradient(135deg,#073d1e,#0f7a3c);padding:36px 40px;color:#fff">
+  <div style="max-width:1240px;margin:auto">
+    <h1 style="font-size:28px;font-weight:900;margin-bottom:6px">الخدمات والعمالة الفلاحية</h1>
+    <p style="font-size:14px;opacity:.85">عامل فلاحي، بيطري، مهني — كل الخدمات في مكان واحد</p>
+  </div>
+</div>
+<div class="breadcrumb" style="background:#fff;border-bottom:1px solid var(--border);padding:10px 40px">
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+    <a routerLink="/" style="color:var(--green);cursor:pointer">الرئيسية</a>
+    <span>/</span>
+    <span style="font-weight:800">الخدمات والعمالة</span>
+  </div>
+</div>
+
+<div style="max-width:1240px;margin:auto;padding:24px 20px">
+  <div style="display:flex;gap:10px;margin-bottom:24px">
+    <button (click)="showWorkerForm = !showWorkerForm; showProfileForm = false" style="padding:10px 22px;border-radius:99px;background:var(--green);color:#fff;font-weight:900;font-size:13px;border:0;cursor:pointer">+ أضف عامل</button>
+    <button (click)="showProfileForm = !showProfileForm; showWorkerForm = false" style="padding:10px 22px;border-radius:99px;background:var(--green-dark);color:#fff;font-weight:900;font-size:13px;border:0;cursor:pointer">+ أضف profile مهني</button>
+  </div>
+
+  @if (showWorkerForm) {
+  <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px">
+    <h3 style="font-size:16px;font-weight:900;margin-bottom:14px">إضافة عامل</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <input [(ngModel)]="workerForm.name" placeholder="الاسم الكامل" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="workerForm.title" placeholder="المهنة (راعي، بيطري...)" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="workerForm.location" placeholder="الولاية" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="workerForm.experience" placeholder="سنوات الخبرة" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="workerForm.price" type="number" placeholder="السعر المطلوب" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="workerForm.priceUnit" placeholder="وحدة السعر (شهرياً/يومياً)" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="workerForm.skills" placeholder="المهارات (مفصولة بفواصل)" style="grid-column:1/-1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <textarea [(ngModel)]="workerForm.description" placeholder="وصف الخبرة" style="grid-column:1/-1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif;min-height:80px"></textarea>
+    </div>
+    <button (click)="addWorker()" style="margin-top:14px;padding:10px 28px;border-radius:99px;background:var(--green);color:#fff;font-weight:900;font-size:13px;border:0;cursor:pointer">نشر العامل</button>
+  </div>
+  }
+
+  @if (showProfileForm) {
+  <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px">
+    <h3 style="font-size:16px;font-weight:900;margin-bottom:14px">إضافة profile مهني</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <input [(ngModel)]="profileForm.fullName" placeholder="الاسم الكامل" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="profileForm.serviceType" placeholder="نوع الخدمة" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="profileForm.region" placeholder="المنطقة" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="profileForm.price" type="number" placeholder="السعر" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="profileForm.period" placeholder="المدة" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="profileForm.availability" placeholder="التوفر" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <textarea [(ngModel)]="profileForm.experienceDescription" placeholder="وصف الخبرة" style="grid-column:1/-1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif;min-height:80px"></textarea>
+    </div>
+    <button (click)="addProfile()" style="margin-top:14px;padding:10px 28px;border-radius:99px;background:var(--green-dark);color:#fff;font-weight:900;font-size:13px;border:0;cursor:pointer">نشر profile</button>
+  </div>
+  }
+
+  <div style="margin-bottom:24px">
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:14px">🧑‍🌾 العمال ({{ workers.length }})</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+      @for (w of workers; track w.id) {
+      <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+          <div style="font-size:15px;font-weight:900">{{ w.name }}</div>
+          <button (click)="deleteWorker(w.id)" style="background:none;border:0;color:var(--red);cursor:pointer;font-size:18px">×</button>
+        </div>
+        <div style="font-size:12px;font-weight:800;color:var(--green);margin-bottom:4px">{{ w.title }}</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">📍 {{ w.location }} · {{ w.experience }}</div>
+        @if (w.skills) {
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+          @for (s of w.skills.split(','); track s) {
+          <span style="background:var(--green-light);color:var(--green);font-size:10px;font-weight:900;padding:3px 9px;border-radius:99px">{{ s.trim() }}</span>
+          }
+        </div>
+        }
+        <div style="border-top:1px solid var(--border);padding-top:10px;display:flex;justify-content:space-between;align-items:center">
+          <div><span style="font-size:17px;color:var(--green);font-weight:900">{{ state.fmtPrice(w.price) }} دت</span> <span style="font-size:11px;color:var(--muted)">/ {{ w.priceUnit }}</span></div>
+          @if (w.available) { <span style="background:var(--green-light);color:var(--green);font-size:10px;font-weight:900;padding:3px 9px;border-radius:99px">متوفر</span> }
+        </div>
+      </div>
+      } @empty {
+      <p style="color:var(--muted);font-size:13px;grid-column:1/-1">لا يوجد عمال بعد. أضف أول عامل!</p>
+      }
+    </div>
+  </div>
+
+  <div>
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:14px">👨‍⚕️ profiles مهنية ({{ profiles.length }})</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+      @for (p of profiles; track p.id) {
+      <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+          <div style="font-size:15px;font-weight:900">{{ p.fullName }}</div>
+          <button (click)="deleteProfile(p.id)" style="background:none;border:0;color:var(--red);cursor:pointer;font-size:18px">×</button>
+        </div>
+        <div style="font-size:12px;font-weight:800;color:var(--green);margin-bottom:4px">{{ p.serviceType }}</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">📍 {{ p.region }}</div>
+        <p style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px">{{ p.experienceDescription }}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--muted)">
+          <span>💰 {{ state.fmtPrice(p.price) }} دت / {{ p.period }}</span>
+          <span>📅 {{ p.availability }}</span>
+        </div>
+      </div>
+      } @empty {
+      <p style="color:var(--muted);font-size:13px;grid-column:1/-1">لا توجد profiles مهنية بعد. أضف أول profile!</p>
+      }
+    </div>
+  </div>
+</div>

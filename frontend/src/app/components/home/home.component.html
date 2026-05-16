@@ -1,0 +1,52 @@
+<section style="padding:48px 20px;max-width:1240px;margin:auto">
+  <div style="text-align:center;margin-bottom:36px">
+    <h1 style="font-size:36px;font-weight:900;color:var(--text);margin-bottom:8px">منصة الفلاحة والحيوانات</h1>
+    <p style="font-size:15px;color:var(--muted)">كل ما تحتاجه في عالم الفلاحة والحيوانات في مكان واحد</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px">
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:32px;margin-bottom:6px">🐑</div>
+      <div style="font-size:28px;font-weight:900;color:var(--green)">{{ totalAnimals }}</div>
+      <div style="font-size:12px;color:var(--muted);font-weight:600">إعلان حيوانات</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:32px;margin-bottom:6px">👨‍🌾</div>
+      <div style="font-size:28px;font-weight:900;color:var(--green)">{{ totalWorkers + totalProfiles }}</div>
+      <div style="font-size:12px;color:var(--muted);font-weight:600">عامل وخدمة مهنية</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:32px;margin-bottom:6px">🌾</div>
+      <div style="font-size:28px;font-weight:900;color:var(--green)">{{ totalProducts }}</div>
+      <div style="font-size:12px;color:var(--muted);font-weight:600">منتج فلاحي</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:32px;margin-bottom:6px">📦</div>
+      <div style="font-size:28px;font-weight:900;color:var(--green)">{{ wholesale.length }}</div>
+      <div style="font-size:12px;color:var(--muted);font-weight:600">عرض جملة</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <a routerLink="/animals" style="background:linear-gradient(135deg,#073d1e,#0f7a3c);border-radius:14px;padding:24px;color:#fff;text-decoration:none;display:block">
+      <div style="font-size:40px;margin-bottom:10px">🐑</div>
+      <h3 style="font-size:18px;font-weight:900;margin-bottom:4px">سوق الحيوانات</h3>
+      <p style="font-size:13px;opacity:.85">تصفح وبيع الأغنام والأبقار والدواجن والماعز</p>
+    </a>
+    <a routerLink="/services" style="background:linear-gradient(135deg,#0a3d1e,#0f7a3c);border-radius:14px;padding:24px;color:#fff;text-decoration:none;display:block">
+      <div style="font-size:40px;margin-bottom:10px">👨‍🌾</div>
+      <h3 style="font-size:18px;font-weight:900;margin-bottom:4px">الخدمات والعمالة</h3>
+      <p style="font-size:13px;opacity:.85">عامل، بيطري، مهني — كل الخدمات الفلاحية</p>
+    </a>
+    <a routerLink="/products" style="background:linear-gradient(135deg,#0b2f1c,#116d39);border-radius:14px;padding:24px;color:#fff;text-decoration:none;display:block">
+      <div style="font-size:40px;margin-bottom:10px">🌾</div>
+      <h3 style="font-size:18px;font-weight:900;margin-bottom:4px">المنتجات الفلاحية</h3>
+      <p style="font-size:13px;opacity:.85">أعلاف، بذور، أسمدة، معدات ومستلزمات</p>
+    </a>
+    <a routerLink="/wholesale" style="background:linear-gradient(135deg,#1a3a2a,#1c7c3a);border-radius:14px;padding:24px;color:#fff;text-decoration:none;display:block">
+      <div style="font-size:40px;margin-bottom:10px">📦</div>
+      <h3 style="font-size:18px;font-weight:900;margin-bottom:4px">سوق الجملة</h3>
+      <p style="font-size:13px;opacity:.85">بيع وشراء بالجملة بأسعار تنافسية</p>
+    </a>
+  </div>
+</section>

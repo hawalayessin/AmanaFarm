@@ -1,0 +1,63 @@
+<div style="background:linear-gradient(135deg,#1a3a2a,#1c7c3a);padding:32px 24px;color:#fff">
+  <div style="max-width:1240px;margin:auto">
+    <h1 style="font-size:32px;font-weight:900;margin-bottom:8px">سوق الجملة</h1>
+    <p style="font-size:14px;opacity:.85">بيع وشراء بالجملة — أغنام، أبقار، أعلاف، ومستلزمات فلاحية</p>
+  </div>
+</div>
+<div class="breadcrumb" style="background:#fff;border-bottom:1px solid var(--border);padding:9px 20px">
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+    <a routerLink="/" style="color:var(--green);cursor:pointer">الرئيسية</a>
+    <span>/</span>
+    <span style="font-weight:800">البيع بالجملة</span>
+  </div>
+</div>
+
+<div style="max-width:1240px;margin:auto;padding:22px 20px">
+  <button (click)="showForm = !showForm" style="margin-bottom:20px;padding:10px 22px;border-radius:99px;background:var(--orange);color:#fff;font-weight:900;font-size:13px;border:0;cursor:pointer">+ أضف عرض جملة</button>
+
+  @if (showForm) {
+  <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px">
+    <h3 style="font-size:16px;font-weight:900;margin-bottom:14px">إضافة عرض جملة</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <input [(ngModel)]="form.title" placeholder="عنوان العرض" style="grid-column:1/-1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="form.category" placeholder="الفئة" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="form.supplierName" placeholder="اسم المورد" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="form.location" placeholder="الولاية" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="form.price" type="number" placeholder="سعر الوحدة" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="form.priceUnit" placeholder="وحدة السعر" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="form.minQuantity" type="number" placeholder="الحد الأدنى للكمية" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <input [(ngModel)]="form.contactPhone" placeholder="رقم الهاتف" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif">
+      <textarea [(ngModel)]="form.description" placeholder="وصف العرض" style="grid-column:1/-1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Cairo,sans-serif;min-height:80px"></textarea>
+    </div>
+    <button (click)="addItem()" style="margin-top:14px;padding:10px 28px;border-radius:99px;background:var(--orange);color:#fff;font-weight:900;font-size:13px;border:0;cursor:pointer">نشر العرض</button>
+  </div>
+  }
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+    @for (item of items; track item.id) {
+    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+          <span style="background:var(--orange-light, #fff3e0);color:var(--orange);font-size:10px;font-weight:900;padding:3px 8px;border-radius:99px">{{ item.category }}</span>
+          <button (click)="deleteItem(item.id)" style="background:none;border:0;color:var(--red);cursor:pointer;font-size:18px">×</button>
+        </div>
+        <h3 style="font-size:15px;font-weight:900;margin-bottom:4px">{{ item.title }}</h3>
+        @if (item.supplierName) {
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:12px;color:var(--muted)">🏢 {{ item.supplierName }}</div>
+        }
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">📍 {{ item.location }}</div>
+        <p style="font-size:12px;color:var(--text-2);line-height:1.5;margin-bottom:8px">{{ item.description }}</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:10px">
+          <div>
+            <div style="font-size:18px;font-weight:900;color:var(--green)">{{ state.fmtPrice(item.price) }} دت</div>
+            @if (item.priceUnit) { <div style="font-size:10px;color:var(--muted)">/ {{ item.priceUnit }}</div> }
+          </div>
+          @if (item.minQuantity) { <div style="font-size:11px;color:var(--muted)">الحد الأدنى: {{ item.minQuantity }}</div> }
+        </div>
+      </div>
+    </div>
+    } @empty {
+    <p style="color:var(--muted);font-size:13px;grid-column:1/-1">لا توجد عروض جملة بعد. أضف أول عرض!</p>
+    }
+  </div>
+</div>
