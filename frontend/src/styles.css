@@ -350,7 +350,7 @@ body.logged-in .guest-only { display: none; }
 /* ─── HERO ─── */
 .hero {
   position: relative; overflow: hidden;
-  background: linear-gradient(90deg, rgba(7,32,16,0.78) 0%, rgba(15,122,60,0.55) 35%, rgba(15,122,60,0.4) 60%, rgba(15,122,60,0.58) 100%), url("assets/waas.png") center center / cover no-repeat;
+  background: linear-gradient(90deg, rgba(7,32,16,0.78) 0%, rgba(15,122,60,0.55) 35%, rgba(15,122,60,0.4) 60%, rgba(15,122,60,0.58) 100%);
   min-height: 820px;
   display: flex; align-items: center; justify-content: space-between;
   padding: 90px 70px; isolation: isolate;

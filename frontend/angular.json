@@ -34,7 +34,9 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -66,8 +68,7 @@
       }
     }
   },
-  "defaultProject": "amana-exact-angular",
   "cli": {
-    "analytics": "fa1c3b4c-938e-4e12-876f-a22d65eb4413"
+    "analytics": false
   }
 }

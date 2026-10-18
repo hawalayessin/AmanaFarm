@@ -35,7 +35,7 @@ public class AnimalService {
                 .featured(Boolean.TRUE.equals(request.getFeatured()))
                 .trustedSeller(Boolean.TRUE.equals(request.getTrustedSeller()))
                 .status("ACTIVE")
-                .userId(request.getUserId())
+                .userId(CurrentUser.id())
                 .build();
 
         if (request.getImages() != null) {
@@ -69,6 +69,7 @@ public class AnimalService {
     public AnimalResponse updateAnimal(Long id, AnimalRequest request) {
         Animal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Animal not found"));
+        CurrentUser.requireOwner(animal.getUserId());
         animal.setTitle(request.getTitle());
         animal.setDescription(request.getDescription());
         animal.setCategory(request.getCategory());
@@ -102,6 +103,7 @@ public class AnimalService {
     public void deleteAnimal(Long id) {
         Animal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Animal not found"));
+        CurrentUser.requireOwner(animal.getUserId());
         animal.setStatus("DELETED");
         animalRepository.save(animal);
     }

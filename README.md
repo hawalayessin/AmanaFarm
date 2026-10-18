@@ -151,3 +151,29 @@ cd frontend
 npm install
 npm run build
 ```
+
+
+## Security and configuration
+
+Before starting the backend, set `JWT_SECRET` to a newly generated random secret
+of at least 32 bytes in your shell. Previously published secrets must be rotated.
+Optional database overrides: `DATABASE_URL`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`.
+The backend uses port 8081. Do not commit your local configuration.
+
+Public reads are allowed for the marketplace catalog. Creating listings requires
+a valid bearer token. Animals, products and wholesale items belong to the user
+identified by that token; another user cannot update or delete them. Catalogs
+without an owner field (jobs, workers, professional profiles) require an ADMIN
+role for writes. Service requests require an ADMIN role for reads and writes.
+Existing ownerless records require an administrator to manage them. No public
+registration endpoint grants ADMIN privileges.
+
+### Verification
+
+From `backend/`, run `./mvnw test` (`.\mvnw.cmd test` on Windows). Tests use an
+isolated H2 database and include anonymous access, invalid tokens, role checks and
+ownership regressions. From `frontend/`, run `npm ci` then `npm run build`.
+GitHub Actions runs the backend tests and frontend build.
+
+This remains an academic demonstration. Use synthetic data and review token
+revocation, deployment configuration and data privacy before a public deployment.

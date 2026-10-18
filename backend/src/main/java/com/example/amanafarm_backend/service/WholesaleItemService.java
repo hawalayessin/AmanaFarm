@@ -24,12 +24,13 @@ public class WholesaleItemService {
         w.setSupplierName(req.getSupplierName());
         w.setImageUrl(req.getImageUrl());
         w.setContactPhone(req.getContactPhone());
-        w.setUserId(req.getUserId());
+        w.setUserId(CurrentUser.id());
         return mapToResponse(wholesaleItemRepository.save(w));
     }
 
     public WholesaleItemResponse updateItem(Long id, WholesaleItemRequest req) {
         WholesaleItem w = wholesaleItemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
+        CurrentUser.requireOwner(w.getUserId());
         w.setTitle(req.getTitle());
         w.setCategory(req.getCategory());
         w.setDescription(req.getDescription());
@@ -52,7 +53,9 @@ public class WholesaleItemService {
     }
 
     public void deleteItem(Long id) {
-        wholesaleItemRepository.deleteById(id);
+        WholesaleItem w = wholesaleItemRepository.findById(id).orElseThrow(() -> new RuntimeException("Resource not found"));
+        CurrentUser.requireOwner(w.getUserId());
+        wholesaleItemRepository.delete(w);
     }
 
     private WholesaleItemResponse mapToResponse(WholesaleItem w) {

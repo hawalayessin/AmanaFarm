@@ -22,12 +22,13 @@ public class ProductService {
         p.setLocation(req.getLocation());
         p.setImageUrl(req.getImageUrl());
         p.setContactPhone(req.getContactPhone());
-        p.setUserId(req.getUserId());
+        p.setUserId(CurrentUser.id());
         return mapToResponse(productRepository.save(p));
     }
 
     public ProductResponse updateProduct(Long id, ProductRequest req) {
         Product p = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        CurrentUser.requireOwner(p.getUserId());
         p.setTitle(req.getTitle());
         p.setCategory(req.getCategory());
         p.setDescription(req.getDescription());
@@ -48,7 +49,9 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        Product p = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Resource not found"));
+        CurrentUser.requireOwner(p.getUserId());
+        productRepository.delete(p);
     }
 
     private ProductResponse mapToResponse(Product p) {
